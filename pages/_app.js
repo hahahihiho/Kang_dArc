@@ -24,11 +24,6 @@ function Marketplace({ Component, pageProps }) {
               Create NFT
             </a>
           </Link>
-          <Link href="/sell-token">
-            <a className="mr-6 text-pink-500 hover:underline">
-              Sell Digital Asset
-            </a>
-          </Link>
           <Link href="/my-assets">
             <a className="mr-6 text-pink-500 hover:underline">
               My Digital Assets

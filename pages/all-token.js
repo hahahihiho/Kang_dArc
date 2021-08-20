@@ -59,33 +59,6 @@ export default function CreatorDashboard() {
   return (
     <div>
       <div className="p-4">
-        <h2 className="text-2xl py-2">My Items</h2>
-          <div className="grid grid-cols-10 sm:grid-cols-2 lg:grid-cols-4 gap-4 pt-4">
-          {
-            nfts.map((nft, i) => {
-              if(nft!=null && nft.owner == signerAddress){
-                return (
-                <div key={i} className="border shadow rounded-xl overflow-hidden">
-                  <div style={{position:'absolute'}} className="rounded-full bg-opacity-70 bg-yellow-300 ml-1 mt-1" >{nft.tokenId}</div>
-                  <img src={nft.image} className="rounded" />
-                  <div className="p-4">
-                    <p style={{ height: '64px' }} className="text-2xl font-semibold">{nft.name}</p>
-                    <div style={{ height: '70px', overflow: 'hidden' }}>
-                      <p className="text-gray-400">{nft.description}</p>
-                    </div>
-                  </div>
-                  <div>
-                    <a className="w-full bg-pink-500 text-white font-bold py-0.5 px-10 rounded">
-                      <Link href={{ pathname:"/sell-token", query: {tokenId : nft.tokenId} }}>Sell </Link>
-                    </a>
-                  </div>
-                </div>
-                )
-              }
-            })
-          }
-        </div>
-        <hr></hr>
         <h2 className="text-2xl py-2">All Items</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 pt-4">
         {

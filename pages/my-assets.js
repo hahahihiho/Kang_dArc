@@ -18,6 +18,7 @@ import NFT from '../artifacts/contracts/NFT.sol/NFT.json'
 // import * as topojson from 'topojson-client';
 
 export default function MyAssets() {
+  const [signerAddress, setSignerAddress] = useState('');
   const [nfts, setNfts] = useState([])
   const [loadingState, setLoadingState] = useState('not-loaded')
   useEffect(() => {
@@ -32,37 +33,37 @@ export default function MyAssets() {
     const connection = await web3Modal.connect()
     const provider = new ethers.providers.Web3Provider(connection)
     const signer = provider.getSigner()
+    const signer_address = await signer.getAddress()
+    setSignerAddress(signer_address)
       
     const marketContract = new ethers.Contract(nftmarketaddress, Market.abi, signer)
     const tokenContract = new ethers.Contract(nftaddress, NFT.abi, signer)
-    const data = await marketContract.fetchMyNFTs()
+    const data = await tokenContract.getAll();
     
-    const items = await Promise.all(data.map(async i => {
-      const tokenUri = await tokenContract.tokenURI(i.tokenId)
-      const meta = await axios.get(tokenUri)
-      let price = ethers.utils.formatUnits(i.price.toString(), 'ether')
-      let item = {
-        price,
-        tokenId: i.tokenId.toNumber(),
-        seller: i.seller,
-        owner: i.owner,
-        image: meta.data.image,
+    const items = await Promise.all(data.map(async (d,i) => {
+      let item = null;
+      if(parseInt(d)!=0){
+        const tokenUri = await tokenContract.tokenURI(i)
+        const meta = await axios.get(tokenUri)
+        item = {
+          tokenId: i,
+          owner: d,
+          name: meta.data.name,
+          description: meta.data.description,
+          image: meta.data.image
+        }
       }
       return item
     }))
+
     setNfts(items)
     setLoadingState('loaded') 
   }
   function loadMap(){
 
-    // const target = "map"
-    // const element = document.getElementById(target);
-    // const width = element.offsetWidth;
-    // const height = element.offsetHeight;
     var width = window.innerWidth*0.4,
     height = window.innerHeight*0.4
-    // centered,
-    // clicked_point;
+
     const DefaultColor="#b8b8b8";
 
     var svg = d3.select("#map").append("svg")
@@ -107,31 +108,39 @@ export default function MyAssets() {
             .style("fill",DefaultColor);
     }
   }
+  console.log(nfts)
   if (loadingState === 'loaded' && !nfts.length) return (<h1 className="py-10 px-20 text-3xl">No assets owned</h1>)
   return (
-    <div className="flex justify-center">
-      <div id="map" className="w-1/2 h-1/2 lm-5">
-      </div>
+    <>
+      <div id="map" className="w-1/2 h-1/2 lm-5"></div>
       <div className="p-4">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 pt-4">
+        <h2 className="text-2xl py-2">My Items</h2>
+          <div className="grid grid-cols-10 sm:grid-cols-2 lg:grid-cols-4 gap-4 pt-4">
           {
-            nfts.map((nft, i) => (
-              <div key={i} className="border shadow rounded-xl overflow-hidden">
-                <div style={{position:'absolute'}} className="rounded-full bg-opacity-70 bg-yellow-300 ml-1 mt-1" >{nft.tokenId}</div>
-                <img src={nft.image} className="rounded" />
-                <div className="p-4 bg-black">
-                  <p className="text-2xl font-bold text-white">Price - {nft.price} Eth</p>
-                  <p>
+            nfts.map((nft, i) => {
+              if(nft!=null && nft.owner == signerAddress){
+                return (
+                <div key={i} className="border shadow rounded-xl overflow-hidden">
+                  <div style={{position:'absolute'}} className="rounded-full bg-opacity-70 bg-yellow-300 ml-1 mt-1" >{nft.tokenId}</div>
+                  <img src={nft.image} className="rounded" />
+                  <div className="p-4">
+                    <p style={{ height: '64px' }} className="text-2xl font-semibold">{nft.name}</p>
+                    <div style={{ height: '70px', overflow: 'hidden' }}>
+                      <p className="text-gray-400">{nft.description}</p>
+                    </div>
+                  </div>
+                  <div>
                     <a className="w-full bg-pink-500 text-white font-bold py-0.5 px-10 rounded">
                       <Link href={{ pathname:"/sell-token", query: {tokenId : nft.tokenId} }}>Sell </Link>
                     </a>
-                  </p>
+                  </div>
                 </div>
-              </div>
-            ))
+                )
+              }
+            })
           }
         </div>
       </div>
-    </div>
+    </>
   )
 }
