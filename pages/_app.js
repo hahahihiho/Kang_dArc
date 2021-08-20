@@ -12,13 +12,10 @@ function Marketplace({ Component, pageProps }) {
     </Head>
     <div>
       <nav className="border-b p-6 flex justify-between">
-        <div className="text-4xl font-bold">Kang d'Arc</div>
+        <Link href="/">
+          <a className="text-4xl font-bold hover:text-green-300">Kang d'Arc</a>
+        </Link>
         <div className="mt-4">
-          <Link href="/">
-            <a className="mr-4 text-pink-500 hover:underline">
-              Home
-            </a>
-          </Link>
           <Link href="/create-item">
             <a className="mr-6 text-pink-500 hover:underline">
               Create NFT
