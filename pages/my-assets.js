@@ -3,7 +3,8 @@ import { useEffect, useState } from 'react'
 import axios from 'axios'
 import Web3Modal from "web3modal"
 
-import Image from 'next/image'
+import Image from 'next/image';
+import Link from 'next/link';
 
 import {
   nftmarketaddress, nftaddress
@@ -33,7 +34,7 @@ export default function MyAssets() {
     const signer = provider.getSigner()
       
     const marketContract = new ethers.Contract(nftmarketaddress, Market.abi, signer)
-    const tokenContract = new ethers.Contract(nftaddress, NFT.abi, provider)
+    const tokenContract = new ethers.Contract(nftaddress, NFT.abi, signer)
     const data = await marketContract.fetchMyNFTs()
     
     const items = await Promise.all(data.map(async i => {
@@ -116,9 +117,15 @@ export default function MyAssets() {
           {
             nfts.map((nft, i) => (
               <div key={i} className="border shadow rounded-xl overflow-hidden">
+                <div style={{position:'absolute'}} className="rounded-full bg-opacity-70 bg-yellow-300 ml-1 mt-1" >{nft.tokenId}</div>
                 <img src={nft.image} className="rounded" />
                 <div className="p-4 bg-black">
                   <p className="text-2xl font-bold text-white">Price - {nft.price} Eth</p>
+                  <p>
+                    <a className="w-full bg-pink-500 text-white font-bold py-0.5 px-10 rounded">
+                      <Link href={{ pathname:"/sell-token", query: {tokenId : nft.tokenId} }}>Sell </Link>
+                    </a>
+                  </p>
                 </div>
               </div>
             ))

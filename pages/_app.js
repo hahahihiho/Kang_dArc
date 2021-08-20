@@ -21,6 +21,11 @@ function Marketplace({ Component, pageProps }) {
           </Link>
           <Link href="/create-item">
             <a className="mr-6 text-pink-500 hover:underline">
+              Create NFT
+            </a>
+          </Link>
+          <Link href="/sell-token">
+            <a className="mr-6 text-pink-500 hover:underline">
               Sell Digital Asset
             </a>
           </Link>
@@ -32,6 +37,11 @@ function Marketplace({ Component, pageProps }) {
           <Link href="/creator-dashboard">
             <a className="mr-6 text-pink-500 hover:underline">
               Creator Dashboard
+            </a>
+          </Link>
+          <Link href="/all-token">
+            <a className="mr-6 text-pink-500 hover:underline">
+              All Token
             </a>
           </Link>
         </div>
