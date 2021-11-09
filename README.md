@@ -1,5 +1,8 @@
 ## Full stack NFT marketplace built with Solidity, IPFS, Metamask & Next.js
 
+## Documents
+Presentation Documents :
+ - ./project-documents/NFT platform_travel.pdf
 
 #### Local setup
 
